@@ -164,16 +164,25 @@ function render(){const b=$('body');
 /* outbound actions */
 function mailto(sub,body){location.href='mailto:?subject='+encodeURIComponent(sub)+'&body='+encodeURIComponent(body)}
 function copy(t){navigator.clipboard.writeText(t);toast('Copied')}
-function ics(title,notes){const dt=today().replace(/-/g,'');const body=['BEGIN:VCALENDAR','VERSION:2.0','BEGIN:VEVENT','SUMMARY:'+title,'DTSTART;VALUE=DATE:'+dt,'DESCRIPTION:'+(notes||'').replace(/\n/g,'\\n'),'END:VEVENT','END:VCALENDAR'].join('\r\n');const a=document.createElement('a');a.href='data:text/calendar;charset=utf8,'+encodeURIComponent(body);a.download=title.slice(0,40).replace(/[^a-z0-9]+/gi,'-')+'.ics';a.click();}
+function ics(title,notes){const dt=today().replace(/-/g,'');const body=['BEGIN:VCALENDAR','VERSION:2.0','BEGIN:VEVENT','SUMMARY:'+title,'DTSTART;VALUE=DATE:'+dt,'DESCRIPTION:'+(notes||'').replace(/\n/g,'\\n'),'END:VEVENT','END:VCALENDAR'].join('\r\n');const a=document.createElement('a');a.href='data:text/calendar;charset=utf8,'+encodeURIComponent(body);a.download=title.slice(0,40).replace(/[^a-z0-9]+/gi,'-')+'.ics';document.body.appendChild(a);a.click();a.remove();toast('Calendar file downloaded');}
 function toast(m){const t=$('note');if(t)t.innerHTML='<span style="color:var(--cook)">✓ '+m+'</span>'}
 function ingredients(c){const m=(c.section||c.caption).match(/ingredients?:?([\s\S]*?)(?:\n##|\n\*\*Method|\n\*\*Why|$)/i);return m?m[1].trim():c.kt}
-function actionButtons(c){const u=c.url||'';let out='';
- if(c.kind==='cook'){out+='<button class="btn primary" onclick="mailto(\'Shopping list: '+esc(c.title)+'\','+JSON.stringify('Ingredients for '+c.title+':\n\n'+ingredients(c))+')">✉ Email shopping list</button>';out+='<button class="btn" onclick="ics(\'Cook: '+esc(c.title)+'\','+JSON.stringify(c.kt)+')">📅 Add to meals</button>';}
- else if(c.kind==='do'){out+='<button class="btn primary" onclick="ics(\''+esc(c.title)+'\','+JSON.stringify(c.kt)+')">📅 Schedule reminder</button>';out+='<button class="btn" onclick="mailto(\'Do this: '+esc(c.title)+'\','+JSON.stringify(c.kt+'\n\n'+u)+')">✉ Email myself</button>';}
- else if(c.kind==='learn'){out+='<button class="btn primary" onclick="copy('+JSON.stringify(c.title+' — '+c.kt)+')">📋 Copy takeaway</button>';out+='<button class="btn" onclick="ics(\'Reflect: '+esc(c.title)+'\','+JSON.stringify(c.kt)+')">📅 Reflection reminder</button>';}
- else{out+='<button class="btn primary" onclick="copy('+JSON.stringify(c.title+' — '+c.kt)+')">📋 Copy</button>';}
- if(u)out+='<button class="btn ghost" onclick="window.open(\''+u+'\',\'_blank\')">↗ Open on Instagram</button>';
+function actionButtons(c){let out='';
+ if(c.kind==='cook'){out+='<button class="btn primary" data-act="shop">✉ Email shopping list</button><button class="btn" data-act="meals">📅 Add to meals</button>';}
+ else if(c.kind==='do'){out+='<button class="btn primary" data-act="remind">📅 Schedule reminder</button><button class="btn" data-act="email">✉ Email myself</button>';}
+ else if(c.kind==='learn'){out+='<button class="btn primary" data-act="copytk">📋 Copy takeaway</button><button class="btn" data-act="reflect">📅 Reflection reminder</button>';}
+ else{out+='<button class="btn primary" data-act="copytk">📋 Copy</button>';}
+ if(c.url)out+='<button class="btn ghost" data-act="ig">↗ Open on Instagram</button>';
  return out;}
+function wireActions(c){document.querySelectorAll('#body [data-act]').forEach(function(b){b.onclick=function(){var a=b.dataset.act;
+  if(a==='shop')mailto('Shopping list: '+c.title,'Ingredients for '+c.title+':\n\n'+ingredients(c));
+  else if(a==='meals')ics('Cook: '+c.title,c.kt);
+  else if(a==='remind')ics(c.title,c.kt);
+  else if(a==='email')mailto('Do this: '+c.title,c.kt+'\n\n'+(c.url||''));
+  else if(a==='copytk')copy(c.title+' — '+c.kt);
+  else if(a==='reflect')ics('Reflect: '+c.title,c.kt);
+  else if(a==='ig')window.open(c.url,'_blank');
+ };});}
 function detail(c){if(c.status==='unseen')setStatus(c,'surfaced');const b=$('body');const k=KIND[c.kind];const learn=c.kind==='learn';
  b.innerHTML='<div class="detail"><span class="back" onclick="render()">← Back</span> '+stChip(c.status)+'<span class="chip '+k[0]+'" style="margin-left:8px">'+k[1]+'</span><div class="dtitle">'+esc(c.title)+'</div><div class="meta"><span>'+esc(c.topic)+'</span><span>'+esc(c.use)+'</span>'+(c.creator?'<span>@'+esc(c.creator)+'</span>':'')+'</div>'+
   (c.url?'<a class="igbtn" href="'+c.url+'" target="_blank">▶ Watch the original on Instagram ↗</a>':'')+
@@ -182,7 +191,8 @@ function detail(c){if(c.status==='unseen')setStatus(c,'surfaced');const b=$('bod
   '<div class="sectionlabel">Take action</div><div class="btns">'+actionButtons(c)+'</div>'+
   '<div class="sectionlabel">Track it</div><div class="btns">'+(learn?'<button class="btn primary" onclick="mark(\''+c.id+'\',\'learned\',3)">✓ I learned this</button>':'<button class="btn primary" onclick="mark(\''+c.id+'\',\'adopted\')">✓ I did it — adopt</button>')+'<button class="btn" onclick="mark(\''+c.id+'\',\'surfaced\',7)">◷ Review later</button><button class="btn ghost" onclick="mark(\''+c.id+'\',\'dismissed\')">✕ Not for me</button></div>'+
   '<div class="note" id="note">Marking commits to <code>progress.json</code> in your private repo — synced across devices.</div>'+
-  (c.caption?'<details><summary>Original caption</summary><div class="src">'+esc(c.caption)+'</div></details>':'')+'</div>';}
+  (c.caption?'<details><summary>Original caption</summary><div class="src">'+esc(c.caption)+'</div></details>':'')+'</div>';
+ wireActions(c);}
 function mark(id,status,reviewDays){const c=CARDS.find(x=>x.id===id);const extra={};if(reviewDays)extra.review_due=addDays(today(),reviewDays);if(status==='adopted')extra.adopted_date=today();setStatus(c,status,extra);$('note').innerHTML='<span style="color:var(--cook)">✓ Saved'+(reviewDays?(' · next review '+extra.review_due):'')+'</span>';setTimeout(()=>{window._today=null;render()},700);}
 /* auto-connect from saved config */
 (function(){const c=localStorage.getItem('lo_cfg');if(c){try{const j=JSON.parse(c);$('g-user').value=j.USER;$('g-repo').value=j.REPO;$('g-branch').value=j.BRANCH;$('g-token').value=j.TOKEN;connect();}catch(e){}}})();
