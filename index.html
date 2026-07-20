@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Life OS — Learn</title>
+<style>
+:root{--s0:#12141a;--s1:#1a1d26;--s2:#222633;--bd:#2c3140;--bd2:#3a4255;--tp:#e8eaf0;--ts:#a7adbe;--tm:#6d7387;--acc:#7aa2ff;--accbg:#1b2540;--do:#7aa2ff;--dobg:#18213b;--learn:#e0b25a;--learnbg:#2a2312;--cook:#6bd39a;--cookbg:#12271c;--look:#9aa0b3;--lookbg:#1c1f28;--warn:#e0b25a}
+@media(prefers-color-scheme:light){:root{--s0:#f4f5f8;--s1:#fff;--s2:#fbfbfd;--bd:#e2e5ec;--bd2:#c9cedb;--tp:#1a1d26;--ts:#525869;--tm:#868ca0;--acc:#3b64d6;--accbg:#eaf0ff;--dobg:#eef3ff;--learnbg:#fdf5e3;--cookbg:#e9f8ef;--lookbg:#f1f2f6}}
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--s0);color:var(--tp);font-size:15px;line-height:1.5}
+.wrap{max-width:880px;margin:0 auto;padding:20px 18px 80px}
+a{color:var(--acc)}
+input{font-family:inherit}
+.head{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:16px}
+.brand{font-weight:650;font-size:1.1rem}.sub{color:var(--tm);font-size:.8rem}
+.prog{font-size:.78rem;color:var(--ts);text-align:right}
+.bar{width:170px;height:8px;border-radius:99px;background:var(--s1);border:1px solid var(--bd);overflow:hidden;margin-top:4px}
+.fill{height:100%;background:var(--acc);width:0;transition:width .4s}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--bd);margin-bottom:18px}
+.tab{padding:9px 13px;font-size:.86rem;color:var(--ts);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+.tab.on{color:var(--tp);border-bottom-color:var(--acc);font-weight:600}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:640px){.grid{grid-template-columns:1fr}}
+.card{border:1px solid var(--bd);border-radius:12px;background:var(--s1);padding:14px;display:flex;flex-direction:column;gap:8px;cursor:pointer;transition:border-color .15s,transform .1s}
+.card:hover{border-color:var(--bd2);transform:translateY(-1px)}
+.chip{display:inline-flex;align-items:center;gap:5px;font-size:.66rem;font-weight:700;padding:2px 8px;border-radius:99px;width:max-content;letter-spacing:.03em;text-transform:uppercase}
+.k-do{background:var(--dobg);color:var(--do)}.k-learn{background:var(--learnbg);color:var(--learn)}.k-cook{background:var(--cookbg);color:var(--cook)}.k-look{background:var(--lookbg);color:var(--look)}
+.ct{font-weight:600;font-size:.95rem;line-height:1.25}.kt{color:var(--ts);font-size:.82rem;line-height:1.4}
+.meta{color:var(--tm);font-size:.72rem;display:flex;gap:10px;flex-wrap:wrap}
+.st{font-size:.66rem;font-weight:700;padding:1px 7px;border-radius:99px;text-transform:uppercase}
+.st-unseen{color:var(--tm);background:var(--s2)}.st-surfaced{color:var(--acc);background:var(--accbg)}.st-adopted{color:var(--cook);background:var(--cookbg)}.st-learned{color:var(--do);background:var(--dobg)}.st-dismissed{color:var(--tm);background:var(--s2);text-decoration:line-through}
+.detail{border:1px solid var(--bd);border-radius:12px;background:var(--s1);padding:20px}
+.back{font-size:.82rem;color:var(--acc);cursor:pointer}
+.dtitle{font-size:1.3rem;font-weight:650;line-height:1.2;margin:10px 0 4px}
+.igbtn{display:flex;align-items:center;justify-content:center;gap:8px;padding:14px;border:1px solid var(--bd2);border-radius:10px;color:var(--ts);font-size:.86rem;margin:12px 0;text-decoration:none}
+.igbtn:hover{border-color:var(--acc);color:var(--acc)}
+.sec{font-size:.9rem;line-height:1.6;color:var(--ts)}.sec h4,.sec strong{color:var(--tp)}
+.sec h4{font-size:.74rem;text-transform:uppercase;letter-spacing:.05em;margin:16px 0 6px}
+.kthi{background:var(--accbg);border:1px solid var(--bd);border-left:3px solid var(--acc);border-radius:8px;padding:11px 13px;font-size:.86rem;color:var(--tp);margin:12px 0}
+details{margin-top:14px;border-top:1px solid var(--bd);padding-top:10px}summary{cursor:pointer;color:var(--ts);font-size:.8rem}
+.src{font-size:.82rem;color:var(--ts);white-space:pre-wrap;margin-top:8px}
+.recall{margin-top:16px;border:1px solid var(--bd);background:var(--accbg);border-radius:10px;padding:13px}
+.recall .lbl{font-size:.66rem;text-transform:uppercase;letter-spacing:.05em;color:var(--acc);font-weight:800}.recall .q{font-weight:600;margin:5px 0}.ans{display:none;color:var(--ts);font-size:.86rem;margin-top:8px}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+.btn{font-family:inherit;font-size:.82rem;font-weight:600;padding:9px 13px;border-radius:8px;cursor:pointer;border:1px solid var(--bd);background:var(--s2);color:var(--tp)}
+.btn:hover{border-color:var(--bd2)}.btn.primary{background:var(--acc);border-color:var(--acc);color:#fff}.btn.ghost{background:transparent;color:var(--ts)}
+.sectionlabel{font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;color:var(--tm);font-weight:700;margin:18px 0 8px}
+.note{font-size:.78rem;color:var(--tm);margin-top:10px}
+.topicrow{display:flex;justify-content:space-between;align-items:center;padding:10px 2px;border-bottom:1px solid var(--bd);font-size:.88rem;cursor:pointer}.topicrow:hover{color:var(--acc)}
+.search{width:100%;padding:10px 12px;border-radius:9px;border:1px solid var(--bd);background:var(--s1);color:var(--tp);font-size:.9rem;margin-bottom:14px}
+.gate{max-width:440px;margin:50px auto;text-align:center}.gate h1{font-size:1.4rem}.gate p{color:var(--ts);font-size:.9rem}
+.gate label{display:block;text-align:left;font-size:.78rem;color:var(--ts);margin:12px 0 4px;font-weight:600}
+.gate input{width:100%;padding:10px 12px;border-radius:9px;border:1px solid var(--bd);background:var(--s1);color:var(--tp);font-size:.9rem}
+.hidden{display:none}
+.status-line{font-size:.75rem;color:var(--tm);margin-top:6px;min-height:16px}
+.gear{font-size:.78rem;color:var(--tm);cursor:pointer}
+</style>
+</head>
+<body>
+<div class="wrap">
+ <!-- CONFIG GATE -->
+ <div id="gate" class="gate">
+  <h1>🧠 Life OS — Learn</h1>
+  <p>Connect your <b>private</b> data repo. Your cards and progress live there; this app just reads and writes them with your token. Everything stays between your browser and your GitHub — the token is saved only in this browser.</p>
+  <label>GitHub username</label><input id="g-user" placeholder="your-username" autocomplete="off">
+  <label>Private data repo name</label><input id="g-repo" placeholder="life-os-data" autocomplete="off">
+  <label>Branch</label><input id="g-branch" placeholder="main" value="main" autocomplete="off">
+  <label>Fine-grained access token <span style="font-weight:400;color:var(--tm)">(Contents: Read &amp; Write, this repo only)</span></label>
+  <input id="g-token" type="password" placeholder="github_pat_…" autocomplete="off">
+  <button class="btn primary" style="width:100%;margin-top:16px" onclick="connect()">Connect &amp; load my library</button>
+  <div class="status-line" id="g-status"></div>
+  <p style="font-size:.74rem;color:var(--tm);margin-top:14px">The repo must contain <code>cards.json</code>. Create a fine-grained PAT scoped to only that repo with Contents read/write — nothing else can be touched.</p>
+ </div>
+
+ <!-- APP -->
+ <div id="appui" class="hidden">
+  <div class="head">
+   <div><div class="brand">🧠 Life OS — Learn</div><div class="sub" id="daysub"></div></div>
+   <div><div class="prog" id="pnum"></div><div class="bar"><div class="fill" id="fill"></div></div><div class="gear" onclick="signout()" style="text-align:right;margin-top:4px">⚙ sign out</div></div>
+  </div>
+  <div class="tabs">
+   <div class="tab on" data-t="today">Today</div>
+   <div class="tab" data-t="browse">Browse</div>
+   <div class="tab" data-t="review">Review <span id="revn" style="color:var(--acc)"></span></div>
+  </div>
+  <div class="status-line" id="savestat"></div>
+  <div id="body"></div>
+ </div>
+</div>
+
+<script>
+let USER,REPO,BRANCH,TOKEN,CARDS=[],PROG={},PROG_SHA=null,tab='today',curFilter=null;
+const KIND={do:['k-do','Do it'],learn:['k-learn','Learn it'],cook:['k-cook','Cook it'],look:['k-look','Look up']};
+const $=id=>document.getElementById(id);
+const today=()=>new Date().toISOString().slice(0,10);
+const addDays=(d,n)=>{let x=new Date(d);x.setDate(x.getDate()+n);return x.toISOString().slice(0,10)};
+const b64d=b=>new TextDecoder().decode(Uint8Array.from(atob(b.replace(/\n/g,'')),c=>c.charCodeAt(0)));
+const b64e=s=>btoa(String.fromCharCode.apply(null,new TextEncoder().encode(s)));
+
+async function api(method,path,body){
+ const r=await fetch(`https://api.github.com/repos/${USER}/${REPO}/${path}`,{method,
+  headers:{Authorization:'Bearer '+TOKEN,Accept:'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'},
+  body:body?JSON.stringify(body):undefined});
+ if(!r.ok){const t=await r.text();const e=new Error('GitHub '+r.status+': '+t.slice(0,120));e.status=r.status;throw e}
+ return r.json();
+}
+async function loadCards(){
+ const meta=await api('GET',`contents/cards.json?ref=${BRANCH}`);
+ let text;
+ if(meta.size>900000||!meta.content){const blob=await api('GET','git/blobs/'+meta.sha);text=b64d(blob.content);}
+ else text=b64d(meta.content);
+ CARDS=JSON.parse(text);
+}
+async function loadProgress(){
+ try{const meta=await api('GET',`contents/progress.json?ref=${BRANCH}`);PROG_SHA=meta.sha;
+  let text=meta.content?b64d(meta.content):b64d((await api('GET','git/blobs/'+meta.sha)).content);PROG=JSON.parse(text);}
+ catch(e){if(e.status===404){PROG={};PROG_SHA=null}else throw e}
+}
+let saveTimer=null;
+function saveProgress(){
+ clearTimeout(saveTimer);$('savestat').textContent='saving…';
+ saveTimer=setTimeout(async()=>{
+  try{const body={message:'Update progress',content:b64e(JSON.stringify(PROG,null,1)),branch:BRANCH};if(PROG_SHA)body.sha=PROG_SHA;
+   const res=await api('PUT','contents/progress.json',body);PROG_SHA=res.content.sha;$('savestat').textContent='';}
+  catch(e){$('savestat').innerHTML='<span style="color:var(--warn)">⚠ could not save progress: '+e.message+'</span>'}
+ },900);
+}
+async function connect(){
+ USER=$('g-user').value.trim();REPO=$('g-repo').value.trim();BRANCH=($('g-branch').value.trim()||'main');TOKEN=$('g-token').value.trim();
+ if(!USER||!REPO||!TOKEN){$('g-status').textContent='Fill in all fields.';return}
+ $('g-status').textContent='Connecting…';
+ try{
+  await loadCards();await loadProgress();
+  CARDS.forEach(c=>{if(PROG[c.id]&&PROG[c.id].status)c.status=PROG[c.id].status});
+  localStorage.setItem('lo_cfg',JSON.stringify({USER,REPO,BRANCH,TOKEN}));
+  startApp();
+ }catch(e){$('g-status').innerHTML='<span style="color:var(--warn)">'+e.message+'</span>'}
+}
+function signout(){localStorage.removeItem('lo_cfg');location.reload()}
+function startApp(){
+ $('gate').classList.add('hidden');$('appui').classList.remove('hidden');
+ $('daysub').textContent=new Date().toLocaleDateString(undefined,{weekday:'long'})+' · one small thing today';
+ document.querySelectorAll('.tab').forEach(el=>el.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));el.classList.add('on');tab=el.dataset.t;curFilter=null;render()});
+ render();prog();
+}
+function prog(){const done=CARDS.filter(c=>['adopted','learned','done'].includes(c.status)).length;
+ $('pnum').textContent=done+' / '+CARDS.length+' integrated';$('fill').style.width=(done/CARDS.length*100).toFixed(1)+'%';
+ const due=reviewDue().length;$('revn').textContent=due?('· '+due):'';}
+function setStatus(c,status,extra){c.status=status;PROG[c.id]=Object.assign({status,updated:today()},extra||{});saveProgress();prog();}
+function reviewDue(){return CARDS.filter(c=>PROG[c.id]&&PROG[c.id].review_due&&PROG[c.id].review_due<=today())}
+function esc(s){return (s||'').replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]))}
+function md(s){return (s||'').split('\n').map(l=>{if(l.startsWith('## '))return '<h4>'+esc(l.slice(3))+'</h4>';l=esc(l).replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');if(/^\d+\./.test(l))return '<div style="margin:3px 0 3px 6px">• '+l.replace(/^\d+\.\s*/,'')+'</div>';return l.trim()?'<div style="margin:5px 0">'+l+'</div>':''}).join('')}
+function stChip(s){s=s||'unseen';return '<span class="st st-'+s+'">'+s+'</span>'}
+function cardEl(c){const k=KIND[c.kind];const d=document.createElement('div');d.className='card';
+ d.innerHTML='<span class="chip '+k[0]+'">'+k[1]+' · '+esc(c.action.split(' ')[0])+'</span><div class="ct">'+esc(c.title)+'</div><div class="kt">'+esc(c.kt)+'</div><div class="meta"><span>'+esc(c.topic)+'</span>'+(c.video?'<span>▶ on IG</span>':'')+'</div><div style="margin-top:auto;display:flex;justify-content:space-between;align-items:center;padding-top:6px">'+stChip(c.status)+'<span style="font-size:.78rem;color:var(--acc);font-weight:600">Open →</span></div>';
+ d.onclick=()=>detail(c);return d;}
+function pick(n){let pool=CARDS.filter(c=>c.status==='unseen');if(pool.length<n)pool=CARDS.filter(c=>!['adopted','learned','done','dismissed'].includes(c.status));const byk={};pool.forEach(c=>{(byk[c.kind]=byk[c.kind]||[]).push(c)});Object.values(byk).forEach(a=>a.sort(()=>Math.random()-.5));const ks=Object.keys(byk),out=[];let i=0;while(out.length<n&&ks.some(k=>byk[k].length)){const k=ks[i++%ks.length];if(byk[k].length)out.push(byk[k].shift())}return out;}
+function render(){const b=$('body');
+ if(tab==='today'){const unseen=CARDS.filter(c=>c.status==='unseen').length;b.innerHTML='<div style="color:var(--ts);font-size:.9rem;margin-bottom:14px">Five directions for today — pick one and act on it. <span style="color:var(--tm)">('+unseen+' still unseen)</span></div><div class="grid" id="g"></div>';const g=$('g');(window._today||(window._today=pick(5))).forEach(c=>g.appendChild(cardEl(c)));}
+ else if(tab==='browse'){const tops={};CARDS.forEach(c=>{const t=c.topic;(tops[t]=tops[t]||{n:0,unseen:0});tops[t].n++;if(c.status==='unseen')tops[t].unseen++});b.innerHTML='<input class="search" id="q" placeholder="Search all '+CARDS.length+' cards…"><div id="list"></div>';const list=$('list');
+  function show(){const q=$('q').value.trim().toLowerCase();if(curFilter||q){const res=CARDS.filter(c=>(!curFilter||c.topic===curFilter)&&(!q||(c.title+' '+c.kt+' '+c.section).toLowerCase().includes(q)));list.innerHTML='<div style="color:var(--tm);font-size:.8rem;margin:6px 0 12px">'+(curFilter?('Topic: '+curFilter+' · '):'')+res.length+' cards <a href="#" onclick="curFilter=null;render();return false" style="margin-left:8px">clear</a></div><div class="grid" id="g"></div>';const g=$('g');res.slice(0,150).forEach(c=>g.appendChild(cardEl(c)));}else{let hh='<div style="color:var(--tm);font-size:.8rem;margin:6px 0 10px">Every topic — a checklist to work through.</div>';Object.keys(tops).sort((a,b)=>tops[b].n-tops[a].n).forEach(t=>hh+='<div class="topicrow" onclick="curFilter=\''+t.replace(/'/g,'')+'\';render()"><span>'+esc(t)+'</span><span style="color:var(--tm)">'+tops[t].unseen+' unseen / '+tops[t].n+'</span></div>');list.innerHTML=hh;}}
+  $('q').oninput=show;show();}
+ else if(tab==='review'){const due=reviewDue();if(!due.length){b.innerHTML='<div style="color:var(--ts);padding:20px 0">Nothing due for review. Mark concepts <b>learned</b> and they resurface here on a spaced schedule (3 days → a week → longer) so they actually stick.</div>';return}b.innerHTML='<div style="color:var(--ts);font-size:.9rem;margin-bottom:14px">Due for review — quiz yourself, then rate it.</div><div class="grid" id="g"></div>';const g=$('g');due.forEach(c=>g.appendChild(cardEl(c)));}}
+/* outbound actions */
+function mailto(sub,body){location.href='mailto:?subject='+encodeURIComponent(sub)+'&body='+encodeURIComponent(body)}
+function copy(t){navigator.clipboard.writeText(t);toast('Copied')}
+function ics(title,notes){const dt=today().replace(/-/g,'');const body=['BEGIN:VCALENDAR','VERSION:2.0','BEGIN:VEVENT','SUMMARY:'+title,'DTSTART;VALUE=DATE:'+dt,'DESCRIPTION:'+(notes||'').replace(/\n/g,'\\n'),'END:VEVENT','END:VCALENDAR'].join('\r\n');const a=document.createElement('a');a.href='data:text/calendar;charset=utf8,'+encodeURIComponent(body);a.download=title.slice(0,40).replace(/[^a-z0-9]+/gi,'-')+'.ics';a.click();}
+function toast(m){const t=$('note');if(t)t.innerHTML='<span style="color:var(--cook)">✓ '+m+'</span>'}
+function ingredients(c){const m=(c.section||c.caption).match(/ingredients?:?([\s\S]*?)(?:\n##|\n\*\*Method|\n\*\*Why|$)/i);return m?m[1].trim():c.kt}
+function actionButtons(c){const u=c.url||'';let out='';
+ if(c.kind==='cook'){out+='<button class="btn primary" onclick="mailto(\'Shopping list: '+esc(c.title)+'\','+JSON.stringify('Ingredients for '+c.title+':\n\n'+ingredients(c))+')">✉ Email shopping list</button>';out+='<button class="btn" onclick="ics(\'Cook: '+esc(c.title)+'\','+JSON.stringify(c.kt)+')">📅 Add to meals</button>';}
+ else if(c.kind==='do'){out+='<button class="btn primary" onclick="ics(\''+esc(c.title)+'\','+JSON.stringify(c.kt)+')">📅 Schedule reminder</button>';out+='<button class="btn" onclick="mailto(\'Do this: '+esc(c.title)+'\','+JSON.stringify(c.kt+'\n\n'+u)+')">✉ Email myself</button>';}
+ else if(c.kind==='learn'){out+='<button class="btn primary" onclick="copy('+JSON.stringify(c.title+' — '+c.kt)+')">📋 Copy takeaway</button>';out+='<button class="btn" onclick="ics(\'Reflect: '+esc(c.title)+'\','+JSON.stringify(c.kt)+')">📅 Reflection reminder</button>';}
+ else{out+='<button class="btn primary" onclick="copy('+JSON.stringify(c.title+' — '+c.kt)+')">📋 Copy</button>';}
+ if(u)out+='<button class="btn ghost" onclick="window.open(\''+u+'\',\'_blank\')">↗ Open on Instagram</button>';
+ return out;}
+function detail(c){if(c.status==='unseen')setStatus(c,'surfaced');const b=$('body');const k=KIND[c.kind];const learn=c.kind==='learn';
+ b.innerHTML='<div class="detail"><span class="back" onclick="render()">← Back</span> '+stChip(c.status)+'<span class="chip '+k[0]+'" style="margin-left:8px">'+k[1]+'</span><div class="dtitle">'+esc(c.title)+'</div><div class="meta"><span>'+esc(c.topic)+'</span><span>'+esc(c.use)+'</span>'+(c.creator?'<span>@'+esc(c.creator)+'</span>':'')+'</div>'+
+  (c.url?'<a class="igbtn" href="'+c.url+'" target="_blank">▶ Watch the original on Instagram ↗</a>':'')+
+  '<div class="kthi">'+esc(c.kt)+'</div><div class="sec">'+md(c.section)+'</div>'+
+  (learn?'<div class="recall"><div class="lbl">Active recall</div><div class="q">Recall the key idea before revealing it.</div><div class="ans" id="ans">'+esc(c.kt)+'</div><button class="btn ghost" style="margin-top:8px;padding:5px 10px" onclick="document.getElementById(\'ans\').style.display=\'block\';this.remove()">Reveal</button></div>':'')+
+  '<div class="sectionlabel">Take action</div><div class="btns">'+actionButtons(c)+'</div>'+
+  '<div class="sectionlabel">Track it</div><div class="btns">'+(learn?'<button class="btn primary" onclick="mark(\''+c.id+'\',\'learned\',3)">✓ I learned this</button>':'<button class="btn primary" onclick="mark(\''+c.id+'\',\'adopted\')">✓ I did it — adopt</button>')+'<button class="btn" onclick="mark(\''+c.id+'\',\'surfaced\',7)">◷ Review later</button><button class="btn ghost" onclick="mark(\''+c.id+'\',\'dismissed\')">✕ Not for me</button></div>'+
+  '<div class="note" id="note">Marking commits to <code>progress.json</code> in your private repo — synced across devices.</div>'+
+  (c.caption?'<details><summary>Original caption</summary><div class="src">'+esc(c.caption)+'</div></details>':'')+'</div>';}
+function mark(id,status,reviewDays){const c=CARDS.find(x=>x.id===id);const extra={};if(reviewDays)extra.review_due=addDays(today(),reviewDays);if(status==='adopted')extra.adopted_date=today();setStatus(c,status,extra);$('note').innerHTML='<span style="color:var(--cook)">✓ Saved'+(reviewDays?(' · next review '+extra.review_due):'')+'</span>';setTimeout(()=>{window._today=null;render()},700);}
+/* auto-connect from saved config */
+(function(){const c=localStorage.getItem('lo_cfg');if(c){try{const j=JSON.parse(c);$('g-user').value=j.USER;$('g-repo').value=j.REPO;$('g-branch').value=j.BRANCH;$('g-token').value=j.TOKEN;connect();}catch(e){}}})();
+</script>
+</body>
+</html>
